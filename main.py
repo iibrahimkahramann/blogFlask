@@ -87,7 +87,61 @@ def delete(id):
     else:
         return 'Kayıt bulunamadı.'
 
+
+
+#comments
+
+
+def blog():
+    conn = sqlite3.connect('blog.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM comments')
+    rows = cursor.fetchall()
+
+    comments_data = []
+    for row in rows:
+        comments_data.append({
+            'comments_id': row[0],
+            'name': row[1],
+            'comment': row[2],
+            'release_date': row[3],
+        })
+
+    conn.close()
     
+    return jsonify(comments_data)
+
+
+
+
+@app.route('/comments-add', methods=['POST'])
+def comments_add():
+    name = request.form['name']
+    comment = request.form['comment']
+    release_date = request.form['release_date']
+    
+
+
+    release_date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
+    conn = sqlite3.connect('blog.db')
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO comments (name ,comment, release_date) VALUES (?,?,?)', (name, comment, release_date))
+    conn.commit()
+    conn.close()
+    return jsonify({'msg' : 'Başarıyla eklendi.'})
+
+
+
+@app.route('/comments/<int:post_id>')
+def comments(post_id):
+    conn = sqlite3.connect('blog.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT comments.name, comments.comment, comments.release_date FROM comments LEFT JOIN posts ON posts.id = comments.blog_id WHERE posts.id = ?', (post_id,))
+    results = cursor.fetchall()
+    conn.close()
+    return jsonify(results)
+
 
 
 
