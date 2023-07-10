@@ -45,7 +45,7 @@ def add():
     id = cursor.lastrowid
     conn.commit()
     conn.close()
-    return jsonify({'id': id},{'title': title},{'summary': summary},{'contents': contents},{'release_date': release_date })
+    return jsonify({'msg' : 'Başarıyla eklendi.'})
 
 
 
