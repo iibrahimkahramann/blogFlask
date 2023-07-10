@@ -75,8 +75,17 @@ def update_record(id):
     cursor.close()
     conn.close()
 
-
-
+@app.route('/delete/<int:id>' , methods=['DELETE'])
+def delete(id):
+    conn = sqlite3.connect('blog.db')
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM posts WHERE id = ?', (id,))
+    conn.commit()
+    conn.close()
+    if cursor.rowcount > 0:
+            return jsonify({'msg': 'Başarıyla silindi'})
+    else:
+        return 'Kayıt bulunamadı.'
 
     
 
