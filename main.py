@@ -1,6 +1,7 @@
-from flask import Flask, jsonify, request
+from  flask import Flask, jsonify, request
 from datetime import datetime
 import sqlite3
+
 
 
 
@@ -28,66 +29,104 @@ def blog():
     
     return jsonify(blog_data)
 
-#Blog eklemek için bunu kullan
+
+
+
 @app.route('/add', methods=['POST'])
 def add():
-    title = request.form['title']
-    summary = request.form['summary']
-    contents = request.form['contents']
-    release_date = request.form['release_date']
+    if "authorization" in request.headers:
+        if 'username' in request.authorization and 'password' in request.authorization:
+            req_username = request.headers.get('username')
+            req_password = request.headers.get('password')
+            conn = sqlite3.connect('blog.db')
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE user_name = ? AND password = ?", (req_username,req_password,))
+            results = cursor.fetchall()
+            conn.close()
+            if results is not None:
+                title = request.form['title']
+                summary = request.form['summary']
+                contents = request.form['contents']
+                release_date = request.form['release_date']
 
+                release_date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
-    release_date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+                conn = sqlite3.connect('blog.db')
+                cursor = conn.cursor()
+                cursor.execute('INSERT INTO posts (title, summary, contents, release_date) VALUES (?,?,?,?)', (title, summary, contents, release_date))
+                conn.commit()
+                conn.close()
+                return jsonify({'msg' : 'Başarıyla eklendi.'})
+            else:
+                return False
+            
 
-    conn = sqlite3.connect('blog.db')
-    cursor = conn.cursor()
-    cursor.execute('INSERT INTO posts (title, summary, contents, release_date) VALUES (?,?,?,?)', (title, summary, contents, release_date))
-    id = cursor.lastrowid
-    conn.commit()
-    conn.close()
-    return jsonify({'msg' : 'Başarıyla eklendi.'})
 
 
 #blog güncellemek için bunu kullan
 @app.route('/update/<int:id>', methods=['POST'])
 def update_record(id):
-    new_title = request.form['title']
-    new_summary = request.form['summary']
-    new_contents = request.form['contents']
-    release_date = request.form['release_date']
-    update_time = request.form['update_time']
+     if "authorization" in request.headers:
+        if 'username' in request.authorization and 'password' in request.authorization:
+            req_username = request.headers.get('username')
+            req_password = request.headers.get('password')
+            conn = sqlite3.connect('blog.db')
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE user_name = ? AND password = ?", (req_username,req_password,))
+            results = cursor.fetchall()
+            conn.close()
+            if results is not None:
+                new_title = request.form['title']
+                new_summary = request.form['summary']
+                new_contents = request.form['contents']
+                release_date = request.form['release_date']
+                update_time = request.form['update_time']
     
 
 
-    update_time = datetime.now().strftime(" %d-%m-%Y %H:%M:%S")
+                update_time = datetime.now().strftime(" %d-%m-%Y %H:%M:%S")
 
-    if new_title and new_summary:
-        conn = sqlite3.connect('blog.db')
-        cursor = conn.cursor()
+                if new_title and new_summary:
+                    conn = sqlite3.connect('blog.db')
+                    cursor = conn.cursor()
 
-        cursor.execute('UPDATE posts SET title = ?, summary = ?, contents = ?, update_time = ? WHERE id = ?', (new_title, new_summary, new_contents, update_time,id))
-        conn.commit()
+                    cursor.execute('UPDATE posts SET title = ?, summary = ?, contents = ?, update_time = ? WHERE id = ?', (new_title, new_summary, new_contents, update_time,id))
+                    conn.commit()
 
-        if cursor.rowcount > 0:
-            return jsonify({'msg': 'Başarıyla güncellendi'})
-        else:
-            return 'Kayıt bulunamadı.'
-    cursor.close()
-    conn.close()
+                    if cursor.rowcount > 0:
+                        return jsonify({'msg': 'Başarıyla güncellendi'})
+                    else:
+                        return 'Kayıt bulunamadı.'
+                cursor.close()
+                conn.close()
+            else:
+                return 'giriş yapamadınız'
 
 
 #Blog silmek için bunu kullan
 @app.route('/delete/<int:id>' , methods=['DELETE'])
 def delete(id):
-    conn = sqlite3.connect('blog.db')
-    cursor = conn.cursor()
-    cursor.execute('DELETE FROM posts WHERE id = ?', (id,))
-    conn.commit()
-    conn.close()
-    if cursor.rowcount > 0:
-            return jsonify({'msg': 'Başarıyla silindi'})
-    else:
-        return 'Kayıt bulunamadı.'
+     if "authorization" in request.headers:
+        if 'username' in request.authorization and 'password' in request.authorization:
+            req_username = request.headers.get('username')
+            req_password = request.headers.get('password')
+            conn = sqlite3.connect('blog.db')
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE user_name = ? AND password = ?", (req_username,req_password,))
+            results = cursor.fetchall()
+            conn.close()
+            if results is not None:
+                conn = sqlite3.connect('blog.db')
+                cursor = conn.cursor()
+                cursor.execute('DELETE FROM posts WHERE id = ?', (id,))
+                conn.commit()
+                conn.close()
+                if cursor.rowcount > 0:
+                        return jsonify({'msg': 'Başarıyla silindi'})
+                else:
+                    return 'Kayıt bulunamadı.'
+            else:
+                return 'giriş yapamdınız' 
 
 
 
@@ -118,21 +157,33 @@ def blog():
 #Yorum eklemek için bunu kullan
 @app.route('/comments-add', methods=['POST'])
 def comments_add():
-    name = request.form['name']
-    comment = request.form['comment']
-    release_date = request.form['release_date']
-    post_id = request.form['id']
+     if "authorization" in request.headers:
+        if 'username' in request.authorization and 'password' in request.authorization:
+            req_username = request.headers.get('username')
+            req_password = request.headers.get('password')
+            conn = sqlite3.connect('blog.db')
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE user_name = ? AND password = ?", (req_username,req_password,))
+            results = cursor.fetchall()
+            conn.close()
+            if results is not None:
+                name = request.form['name']
+                comment = request.form['comment']
+                release_date = request.form['release_date']
+                post_id = request.form['id']
     
 
 
-    release_date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+                release_date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
-    conn = sqlite3.connect('blog.db')
-    cursor = conn.cursor()
-    cursor.execute('INSERT INTO comments (name ,comment, release_date,id) VALUES (?,?,?,?)', (name, comment, release_date,post_id))
-    conn.commit()
-    conn.close()
-    return jsonify({'msg' : 'Başarıyla eklendi.'})
+                conn = sqlite3.connect('blog.db')
+                cursor = conn.cursor()
+                cursor.execute('INSERT INTO comments (name ,comment, release_date,id) VALUES (?,?,?,?)', (name, comment, release_date,post_id))
+                conn.commit()
+                conn.close()
+                return jsonify({'msg' : 'Başarıyla eklendi.'})
+            else:
+                return 'giriş yapmadınız'
 
 
 #yorum sorgulama
@@ -149,41 +200,83 @@ def comments(post_id):
 #yorum silmek için bunu kullan
 @app.route('/comments-del/<int:id>/<int:comment_id>', methods=['DELETE'])
 def comments_delete(id, comment_id):
-    conn = sqlite3.connect('blog.db')
-    cursor = conn.cursor()
-    cursor.execute('DELETE FROM comments WHERE id = ? AND comment_id = ?', (id, comment_id))
-    conn.commit()
-    conn.close()
-    if cursor.rowcount > 0:
-        return jsonify({'msg': 'Yorum başarıyla silindi.'})
-    else:
-        return 'Yorum bulunamadı veya silinemedi.'
+     if "authorization" in request.headers:
+        if 'username' in request.authorization and 'password' in request.authorization:
+            req_username = request.headers.get('username')
+            req_password = request.headers.get('password')
+            conn = sqlite3.connect('blog.db')
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE user_name = ? AND password = ?", (req_username,req_password,))
+            results = cursor.fetchall()
+            conn.close()
+            if results is not None:
+                conn = sqlite3.connect('blog.db')
+                cursor = conn.cursor()
+                cursor.execute('DELETE FROM comments WHERE id = ? AND comment_id = ?', (id, comment_id))
+                conn.commit()
+                conn.close()
+                if cursor.rowcount > 0:
+                    return jsonify({'msg': 'Yorum başarıyla silindi.'})
+                else:
+                    return 'Yorum bulunamadı veya silinemedi.'
+        else:
+            return 'giriş yapamadınız'
 
 
 
 #Yorum güncellemek için bunu kullan
 @app.route('/comments-update/<int:comment_id>', methods=['POST'])
 def comment_update(comment_id):
-    name = request.form['name']
-    comment = request.form['comment']
-    
-    update_time = datetime.now().strftime(" %d-%m-%Y %H:%M:%S")
+     if "authorization" in request.headers:
+        if 'username' in request.authorization and 'password' in request.authorization:
+            req_username = request.headers.get('username')
+            req_password = request.headers.get('password')
+            conn = sqlite3.connect('blog.db')
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM users WHERE user_name = ? AND password = ?", (req_username,req_password,))
+            results = cursor.fetchall()
+            conn.close()
+            if results is not None:
+                name = request.form['name']
+                comment = request.form['comment']
+                
+                update_time = datetime.now().strftime(" %d-%m-%Y %H:%M:%S")
 
-    if name and comment:
-        conn = sqlite3.connect('blog.db')
-        cursor = conn.cursor()
-        cursor.execute('UPDATE comments SET name = ?, comment = ?,  update_time = ? WHERE comment_id = ?', (name, comment, update_time,comment_id))
+                if name and comment:
+                    conn = sqlite3.connect('blog.db')
+                    cursor = conn.cursor()
+                    cursor.execute('UPDATE comments SET name = ?, comment = ?,  update_time = ? WHERE comment_id = ?', (name, comment, update_time,comment_id))
+                    conn.commit()
+
+                    if cursor.rowcount > 0:
+                        return jsonify({'msg': 'Başarıyla güncellendi'})
+                    else:
+                        return 'Kayıt bulunamadı.'
+                cursor.close()
+                conn.close()
+            else:
+                return 'giriş yapamadınız'
+
+
+
+
+
+
+#USERNAME
+
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    conn = sqlite3.connect('blog.db')
+    cursor = conn.cursor()
+    if request.method == 'POST':
+        user_name = request.form['user_name']
+        password = request.form['password']
+        cursor.execute("INSERT INTO users(user_name, password) VALUES (?, ?)", (user_name,password))
         conn.commit()
-
-        if cursor.rowcount > 0:
-            return jsonify({'msg': 'Başarıyla güncellendi'})
-        else:
-            return 'Kayıt bulunamadı.'
-    cursor.close()
-    conn.close()
-
-
-
+        return 'Kayıt başarılı!'
+    
 
 app.run()
 
