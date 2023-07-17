@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
   <head>
   <meta charset="utf-8" />
+ 
+
 
   <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
 
@@ -10,7 +12,7 @@
     name="viewport"
   />
 
-  <title>Contact | Atlas Template</title>
+  <title>İletişim</title>
 
   <meta property="og:title" content="Contact | Atlas Template" />
 
@@ -83,6 +85,12 @@
 
   <!--Alpine Js V3-->
   <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="../assets/js/jquery-3.7.0.min.js" defer></script>
+    <script src="../assets/js/main.js" defer></script>
+    <title>Flask Render Template</title>
 </head>
 
 
@@ -96,14 +104,14 @@
     <div id="main">
       <div class="container mx-auto">
   <div class="flex items-center justify-between py-6 lg:py-10">
-    <a href="/" class="flex items-center">
+    <a href="index.html" class="flex items-center">
       <span href="/" class="mr-2">
         <img src="/assets/img/logo.svg" alt="logo" />
       </span>
       <p
         class="hidden font-body text-2xl font-bold text-primary dark:text-white lg:block"
       >
-        John Doe
+        İbrahim KAHRAMAN
       </p>
     </a>
     <div class="flex items-center lg:hidden">
@@ -135,9 +143,9 @@
             class="absolute left-0 bottom-0 z-20 h-0 w-full opacity-75 transition-all group-hover:h-2 group-hover:bg-yellow"
           ></div>
           <a
-            href="/"
+            href="index.html"
             class="relative z-30 block px-2 font-body text-lg font-medium text-primary transition-colors group-hover:text-green dark:text-white dark:group-hover:text-secondary"
-            >Intro</a
+            >Giriş</a
           >
         </li>
         
@@ -146,7 +154,7 @@
             class="absolute left-0 bottom-0 z-20 h-0 w-full opacity-75 transition-all group-hover:h-2 group-hover:bg-yellow"
           ></div>
           <a
-            href="/blog"
+            href="blog.html"
             class="relative z-30 block px-2 font-body text-lg font-medium text-primary transition-colors group-hover:text-green dark:text-white dark:group-hover:text-secondary"
             >Blog</a
           >
@@ -157,9 +165,9 @@
             class="absolute left-0 bottom-0 z-20 h-0 w-full opacity-75 transition-all group-hover:h-2 group-hover:bg-yellow"
           ></div>
           <a
-            href="/uses"
+            href="uses.html"
             class="relative z-30 block px-2 font-body text-lg font-medium text-primary transition-colors group-hover:text-green dark:text-white dark:group-hover:text-secondary"
-            >Uses</a
+            >Projeler</a
           >
         </li>
         
@@ -168,9 +176,9 @@
             class="absolute left-0 bottom-0 z-20 h-0 w-full opacity-75 transition-all group-hover:h-2 group-hover:bg-yellow"
           ></div>
           <a
-            href="/contact"
+            href="contact.html"
             class="relative z-30 block px-2 font-body text-lg font-medium text-primary transition-colors group-hover:text-green dark:text-white dark:group-hover:text-secondary"
-            >Contact</a
+            >İletişim</a
           >
         </li>
         
@@ -199,7 +207,7 @@
       
       <li class="">
         <a
-          href="/"
+          href="index.html"
           class="mb-3 block px-2 font-body text-lg font-medium text-white"
           >Intro</a
         >
@@ -207,7 +215,7 @@
       
       <li class="">
         <a
-          href="/blog"
+          href="blog.html"
           class="mb-3 block px-2 font-body text-lg font-medium text-white"
           >Blog</a
         >
@@ -215,7 +223,7 @@
       
       <li class="">
         <a
-          href="/uses"
+          href="uses.html"
           class="mb-3 block px-2 font-body text-lg font-medium text-white"
           >Uses</a
         >
@@ -223,7 +231,7 @@
       
       <li class="">
         <a
-          href="/contact"
+          href="contact.html"
           class="mb-3 block px-2 font-body text-lg font-medium text-white"
           >Contact</a
         >
@@ -242,36 +250,36 @@
     <h1
       class="pt-5 font-body text-4xl font-semibold text-primary dark:text-white md:text-5xl lg:text-6xl"
     >
-      Contact
+      İletişim
     </h1>
     <div class="pr-2 pt-3 sm:pt-0">
       <p class="font-body text-xl font-light text-primary dark:text-white">
-        Got a question or proposal, or just want to say hello? Go ahead. You know what to do.
+        Bir sorunuz veya öneriniz mi var, yoksa sadece merhaba mı demek istiyorsunuz? Buyurun. Ne yapacağınızı biliyorsunuz.
       </p>
     </div>
-    <form class="pt-16">
+    <form id="form" class="pt-16">
       <div class="flex flex-col sm:flex-row">
         <div class="w-full sm:mr-3 sm:w-1/2">
           <label
             class="block pb-3 font-body font-medium text-primary dark:text-white"
-            >Your Name</label
+            >Adınız</label
           >
           <input
             type="text"
             id="name"
-            placeholder="What should I call you?"
+            placeholder="Adınızı girin..."
             class="w-full border border-primary bg-grey-lightest px-5 py-4 font-body font-light text-primary placeholder-primary transition-colors focus:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white"
           />
         </div>
         <div class="w-full pt-6 sm:ml-3 sm:w-1/2 sm:pt-0">
           <label
             class="block pb-3 font-body font-medium text-primary dark:text-white"
-            >Email Address</label
+            >Eposta</label
           >
           <input
             type="email"
             id="email"
-            placeholder="Drop that email here…"
+            placeholder="Eposta adresinizi girin..."
             class="w-full border border-primary bg-grey-lightest px-5 py-4 font-body font-light text-primary placeholder-primary transition-colors focus:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white"
           />
         </div>
@@ -279,25 +287,43 @@
       <div class="w-full pt-6 sm:pt-10">
         <label
           class="block pb-3 font-body font-medium text-primary dark:text-white"
-          >Email Address</label
+          >Mesajınız</label
         >
         <textarea
           id="message"
           cols="30"
           rows="9"
-          placeholder="Tell me all the things that you think I need to hear…"
+          placeholder="Duymam gerektiğini düşündüğün her şeyi söyle."
           class="w-full border border-primary bg-grey-lightest px-5 py-4 font-body font-light text-primary placeholder-primary transition-colors focus:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary dark:text-white"
         ></textarea>
       </div>
-      <button
+      <buton 
+      onclick="myFunction()"
+        id="button"
         class="mt-10 mb-12 block bg-secondary px-10 py-4 text-center font-body text-xl font-semibold text-white transition-colors hover:bg-green sm:inline-block sm:text-left sm:text-2xl"
       >
-        Send Message
-      </button>
+        Gönder
+      </buton>
+      <div id="send">
+        <script>
+          function myFunction() {
+            let person = alert( "Gönderildi");
+          }
+        </script>
+      </div>
+      <div id="not_send">
+        <script>
+          function myFunction() {
+            let person = alert( "Gönderil");
+          }
+        </script>
+      </div>
     </form>
   </div>
 </div>
 </div>
+
+
 
       <div class="container mx-auto">
   <div
@@ -308,24 +334,24 @@
         <img src="/assets/img/logo.svg" alt="logo" />
       </a>
       <p class="pt-5 font-body font-light text-primary dark:text-white sm:pt-0">
-        ©2020 John Doe.
+        ©2023 İbrahim KAHRAMAN.
       </p>
     </div>
     <div class="mr-auto flex items-center pt-5 sm:mr-0 sm:pt-0">
       
-      <a href="https://github.com/ " target="_blank">
+      <a href="https://github.com/iibrahimkahramann" target="_blank">
         <i
           class="text-4xl text-primary dark:text-white pl-5 hover:text-secondary dark:hover:text-secondary transition-colors bx bxl-github"
         ></i>
       </a>
       
-      <a href="https://codepen.io/ " target="_blank">
+      <a href="https://www.instagram.com/iibrahimkahramnn/" target="_blank">
         <i
-          class="text-4xl text-primary dark:text-white pl-5 hover:text-secondary dark:hover:text-secondary transition-colors bx bxl-codepen"
+          class="text-4xl text-primary dark:text-white pl-5 hover:text-secondary dark:hover:text-secondary transition-colors bx bxl-instagram"
         ></i>
       </a>
       
-      <a href="https://www.linkedin.com/ " target="_blank">
+      <a href="https://www.linkedin.com/in/ibrahim-kahraman-3126a8262// " target="_blank">
         <i
           class="text-4xl text-primary dark:text-white pl-5 hover:text-secondary dark:hover:text-secondary transition-colors bx bxl-linkedin"
         ></i>

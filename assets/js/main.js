@@ -1,3 +1,6 @@
+
+
+
 function global() {
   return {
     isMobileMenuOpen: false,
@@ -30,3 +33,49 @@ function global() {
     },
   };
 }
+
+
+
+// $('form').submit(function(event) {
+//   event.preventDefault();
+//   const nameVal = $('#name').val();
+
+//   showName();
+//   $.post('/msg',
+//     { name: nameVal },
+//     function(name){
+//       $('#name').val('')
+//       $('blog.db').append(createTodoTemplate(nameVal, false));
+
+//     }
+  
+//   )
+
+
+
+
+
+
+// });
+
+
+$("form").submit(function(event) {
+  event.preventDefault();
+  $("button").click(function(){
+    $.ajax({
+      url: '/contact/',
+      type: 'POST',
+      data: {
+        name: $('#name').val(),
+        email: $('#email').val(),
+        msg: $('#message').val()
+      },
+      success: function(contact_add) {
+        $('#send').html(contact_add);
+      },
+      error: function(contact_add) {
+        $('#not_send').html(contact_add);
+      }
+    });
+  });
+});

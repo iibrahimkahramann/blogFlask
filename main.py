@@ -1,4 +1,4 @@
-from  flask import Flask, jsonify, request
+from  flask import Flask, jsonify, request, render_template
 from datetime import datetime
 import sqlite3
 
@@ -7,7 +7,11 @@ import sqlite3
 
 app = Flask(__name__)
 
-@app.route('/')
+
+#ADMİN PANEL
+
+
+@app.route('/blog')
 def blog():
     conn = sqlite3.connect('blog.db')
     cursor = conn.cursor()
@@ -38,12 +42,13 @@ def add():
     summary = request.form['summary']
     contents = request.form['contents']
     release_date = request.form['release_date']
+   
 
     release_date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
     conn = sqlite3.connect('blog.db')
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO posts (title, summary, contents, release_date) VALUES (?,?,?,?)', (title, summary, contents, release_date))
+    cursor.execute('INSERT INTO posts (title, summary, contents, release_date,) VALUES (?,?,?,?)', (title, summary, contents, release_date,))
     conn.commit()
     conn.close()
     return jsonify({'msg' : 'Başarıyla eklendi.'})
@@ -107,7 +112,8 @@ def blog():
             'comment_id': row[0],
             'name': row[1],
             'comment': row[2],
-            'release_date': row[3],
+            'eposta': row[3],
+            'release_date': row[4],
         })
 
     conn.close()
@@ -121,6 +127,7 @@ def blog():
 def comments_add():
     name = request.form['name']
     comment = request.form['comment']
+    eposta = request.form['eposta']
     release_date = request.form['release_date']
     post_id = request.form['id']
 
@@ -130,7 +137,7 @@ def comments_add():
 
     conn = sqlite3.connect('blog.db')
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO comments (name ,comment, release_date,id) VALUES (?,?,?,?)', (name, comment, release_date,post_id))
+    cursor.execute('INSERT INTO comments (name ,comment,eposta, release_date,id) VALUES (?,?,?,?,?)', (name, comment,eposta, release_date,post_id))
     conn.commit()
     conn.close()
     return jsonify({'msg' : 'Başarıyla eklendi.'})
@@ -140,7 +147,7 @@ def comments_add():
 def comments(post_id):
     conn = sqlite3.connect('blog.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT comments.comment_id comments.name, comments.comment, comments.release_date FROM comments LEFT JOIN posts ON posts.id = comments.id WHERE posts.id = ?', (post_id,))
+    cursor.execute('SELECT comments.comment_id comments.name, comments.comment,.comments.eposta, comments.release_date FROM comments LEFT JOIN posts ON posts.id = comments.id WHERE posts.id = ?', (post_id,))
     results = cursor.fetchall()
     conn.close()
     return jsonify(results)
@@ -166,13 +173,13 @@ def comments_delete(id, comment_id):
 def comment_update(comment_id):
     name = request.form['name']
     comment = request.form['comment']
-    
+    eposta = request.form['eposta']
     update_time = datetime.now().strftime(" %d-%m-%Y %H:%M:%S")
 
     if name and comment:
         conn = sqlite3.connect('blog.db')
         cursor = conn.cursor()
-        cursor.execute('UPDATE comments SET name = ?, comment = ?,  update_time = ? WHERE comment_id = ?', (name, comment, update_time,comment_id))
+        cursor.execute('UPDATE comments SET name = ?, comment = ?, eposta = ?,  update_time = ? WHERE comment_id = ?', (name, comment,eposta, update_time,comment_id))
         conn.commit()
 
         if cursor.rowcount > 0:
@@ -182,6 +189,50 @@ def comment_update(comment_id):
     cursor.close()
     conn.close()
 
+
+
+
+#İLETİŞİM
+
+# @app.route('/msg', methods=['POST'])
+# def msg_add():
+#     name = request.form['name']
+#     eposta = request.form['eposta']
+#     msg = request.form['msg']
+#     release_date = request.form['release_date']
+
+
+
+#     release_date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
+#     conn = sqlite3.connect('blog.db')
+#     cursor = conn.cursor()
+#     cursor.execute('INSERT INTO contact (name,eposta,msg,release_date) VALUES (?,?,?,?)', (name,eposta,msg, release_date))
+#     conn.commit()
+#     conn.close()
+#     return jsonify({'msg' : 'Başarıyla eklendi.'})
+
+
+@app.route('/contact')
+def contactMe():
+    return render_template('/templates/contact.html')
+
+@app.route('/contact/', methods=['POST'])
+def contactMeUser():
+    name = request.form['name']
+    email = request.form['eposta']
+    msg = request.form['msg']
+    release_date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
+    conn = sqlite3.connect('blog.db')
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO contacts (name, eposta, msg, release_date) VALUES (?, ?, ?, ?)', (name, email, msg, release_date))
+    conn.commit()
+    conn.close()
+    
+
+
+    
 
 
 
@@ -203,5 +254,6 @@ def register():
     
 
 app.run()
+
 
 
